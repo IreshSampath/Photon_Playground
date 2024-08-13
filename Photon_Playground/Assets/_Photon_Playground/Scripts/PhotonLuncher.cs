@@ -9,17 +9,14 @@ namespace com.GameArtGames.PhotonPlayground
         #region Private Serializable Fields
 
         [Tooltip("The Ui Panel to let the user enter name, connect and play")]
-        [SerializeField]
-        private GameObject controlPanel;
+        [SerializeField] GameObject controlPanel;
 
         [Tooltip("The UI Label to inform the user that the connection is in progress")]
-        [SerializeField]
-        private GameObject progressLabel;
+        [SerializeField] GameObject progressLabel;
 
         /// The maximum number of players per room. When a room is full, it can't be joined by new players, and so new room will be created.
         [Tooltip("The maximum number of players per room. When a room is full, it can't be joined by new players, and so new room will be created")]
-        [SerializeField]
-        private byte maxPlayersPerRoom = 4;
+        [SerializeField] byte maxPlayersPerRoom = 4;
 
         #endregion
 
