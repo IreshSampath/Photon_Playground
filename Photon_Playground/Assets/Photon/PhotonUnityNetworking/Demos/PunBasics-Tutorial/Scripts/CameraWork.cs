@@ -12,10 +12,8 @@ using UnityEngine;
 
 namespace Photon.Pun.Demo.PunBasics
 {
-	/// <summary>
 	/// Camera work. Follow a target
-	/// </summary>
-	public class CameraWork : MonoBehaviour
+	public class CameraWork : MonoBehaviourPunCallbacks
 	{
         #region Private Fields
 
@@ -48,22 +46,25 @@ namespace Photon.Pun.Demo.PunBasics
 		// Cache for camera offset
 		Vector3 cameraOffset = Vector3.zero;
 		
-		
         #endregion
 
         #region MonoBehaviour Callbacks
 
-        /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during initialization phase
-        /// </summary>
         void Start()
 		{
-			// Start following the target if wanted.
-			if (followOnStart)
+			if (!photonView.IsMine)
 			{
-				OnStartFollowing();
-			}
-		}
+				//cameraTransform.GetComponent<Camera>().enabled = false;
+				gameObject.GetComponent<CameraWork>().enabled = false;
+            }
+
+            // Start following the target if wanted.
+            if (followOnStart)
+            {
+                OnStartFollowing();
+            }
+        }
 
 
 		void LateUpdate()
@@ -85,12 +86,10 @@ namespace Photon.Pun.Demo.PunBasics
 
 		#region Public Methods
 
-		/// <summary>
 		/// Raises the start following event. 
 		/// Use this when you don't know at the time of editing what to follow, typically instances managed by the photon network.
-		/// </summary>
 		public void OnStartFollowing()
-		{	      
+        {
 			cameraTransform = Camera.main.transform;
 			isFollowing = true;
 			// we don't smooth anything, we go straight to the right camera shot
@@ -101,20 +100,16 @@ namespace Photon.Pun.Demo.PunBasics
 
 		#region Private Methods
 
-		/// <summary>
 		/// Follow the target smoothly
-		/// </summary>
 		void Follow()
 		{
 			cameraOffset.z = -distance;
 			cameraOffset.y = height;
-			
-		    cameraTransform.position = Vector3.Lerp(cameraTransform.position, this.transform.position +this.transform.TransformVector(cameraOffset), smoothSpeed*Time.deltaTime);
 
-		    cameraTransform.LookAt(this.transform.position + centerOffset);
-		    
+			cameraTransform.position = Vector3.Lerp(cameraTransform.position, this.transform.position + this.transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
+
+			cameraTransform.LookAt(this.transform.position + centerOffset);
 	    }
-
 	   
 		void Cut()
 		{

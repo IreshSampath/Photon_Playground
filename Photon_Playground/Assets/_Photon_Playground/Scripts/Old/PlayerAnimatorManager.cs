@@ -1,10 +1,12 @@
+using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace com.GameArtGames.PhotonPlayground
 {
-    public class PlayerAnimatorManager : MonoBehaviour
+    public class PlayerAnimatorManager : MonoBehaviourPunCallbacks
     {
         #region Private Fields
 
@@ -29,6 +31,11 @@ namespace com.GameArtGames.PhotonPlayground
         // Update is called once per frame
         void Update()
         {
+            if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
+            {
+                return;
+            }
+
             if (!animator)
             {
                 return;
