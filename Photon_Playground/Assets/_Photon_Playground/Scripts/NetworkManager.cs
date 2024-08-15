@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,15 +38,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        _coroutine = PrintConsole("<color=yellow>Connecting...</color>");
-        StartCoroutine(_coroutine);
-        _createJoinPanel.SetActive(false);
+    //void Start()
+    //{
 
-        //Connect to the Master server
-        PhotonNetwork.ConnectUsingSettings();
-    }
+
+
+    //}
 
     IEnumerator PrintConsole(string printText)
     {
@@ -55,6 +53,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     #region public methods
+
+    public void StartMultiplayer()
+    {
+        _coroutine = PrintConsole("<color=yellow>Connecting...</color>");
+        StartCoroutine(_coroutine);
+        _createJoinPanel.SetActive(false);
+
+        //Connect to the Master server
+        PhotonNetwork.ConnectUsingSettings();
+    }
 
     // Attempts to create a room
     public void CreateRoom()
@@ -139,6 +147,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Instantiate(_agent.name, new Vector3(0, 3, 0), Quaternion.identity);
 
         //LoadScene(1);
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach (RoomInfo room in roomList)
+        {
+            print(room.Name);
+        }
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
