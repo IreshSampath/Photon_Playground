@@ -1,12 +1,15 @@
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class NetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
+public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
 {
-    [SerializeField] UIManager _uIManager;
+    [SerializeField] MPUIManager _uIManager;
     [SerializeField] GameObject _agent;
 
     // Instance
@@ -14,8 +17,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
     IEnumerator _coroutine;
 
-    TypedLobby customLobby = new TypedLobby("customLobby", LobbyType.Default);
-    List<RoomInfo> rooms = new List<RoomInfo>();
+   //TypedLobby customLobby = new TypedLobby("customLobby", LobbyType.Default);
 
     void Awake()
     {
@@ -56,27 +58,54 @@ public class NetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
     // Attempts to create a room
     public void CreateRoom()
     {
-        if (_uIManager.RoomNameInputField.text == "")
-        {
-            StopCoroutine(_coroutine);
-            _coroutine = _uIManager.PrintConsole("<color=red>Room name is required</color>");
-            StartCoroutine(_coroutine);
-        }
-        else if (_uIManager.PlayerNameInputField.text == "")
+        if (_uIManager.PlayerNameInputField.text == "")
         {
             StopCoroutine(_coroutine);
             _coroutine = _uIManager.PrintConsole("<color=red>Player name is required</color>");
             StartCoroutine(_coroutine);
         }
+        else if(_uIManager.CreateRoomNameInputField.text == "")
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = _uIManager.PrintConsole("<color=red>Room name is required</color>");
+            StartCoroutine(_coroutine);
+        }
         else
         {
-            PhotonNetwork.CreateRoom(_uIManager.RoomNameInputField.text);
+            RoomOptions options = new RoomOptions();
+
+            options.IsVisible = !_uIManager.IsPrivateToggle.isOn;
+
+            options.MaxPlayers = _uIManager.MaxPlayerInputField.text != "" ? (byte) Int32.Parse(_uIManager.MaxPlayerInputField.text) : 0;
+
+            PhotonNetwork.CreateRoom(_uIManager.CreateRoomNameInputField.text, options);
         }
     }
 
     // Attempts to join a room
-    public void JoinRoom(GameObject go)
+    public void JoinRoomPrivate()
     {
+        if (_uIManager.PlayerNameInputField.text == "")
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = _uIManager.PrintConsole("<color=red>Player name is required</color>");
+            StartCoroutine(_coroutine);
+        }
+        else if (_uIManager.JoinRoomNameInputField.text == "")
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = _uIManager.PrintConsole("<color=red>Room name is required</color>");
+            StartCoroutine(_coroutine);
+        }
+        else
+        {
+            PhotonNetwork.JoinRoom(_uIManager.JoinRoomNameInputField.text);
+        }
+    }
+
+    public void JoinRoomPublic(GameObject go)
+    {
+
         if (_uIManager.PlayerNameInputField.text == "")
         {
             StopCoroutine(_coroutine);
@@ -89,17 +118,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
     }
 
-    public void LeaveServer()
-    {
-        PhotonNetwork.Disconnect();
-    }
-
     public void LeaveRoom()
     {
-        PhotonNetwork.LeaveRoom();
-
         _uIManager.CreateJoinPanel.SetActive(true);
         _uIManager.GameHUDPanel.SetActive(false);
+
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public void LeaveServer()        
+    {
+        PhotonNetwork.Disconnect();
     }
 
     // Change the scence using Photon's system
@@ -154,7 +183,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
         PhotonNetwork.Instantiate(_agent.name, new Vector3(0, 3, 0), Quaternion.identity);
 
-        //LoadScene(1);
+        //LoadScene(2);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -171,7 +200,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         StopCoroutine(_coroutine);
         _coroutine = _uIManager.PrintConsole("<color=red>" + message + "</color>");
         StartCoroutine(_coroutine);
-
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

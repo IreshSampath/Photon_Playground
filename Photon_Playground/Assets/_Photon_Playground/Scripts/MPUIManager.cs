@@ -4,15 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class MPUIManager : MonoBehaviour
 {
     public GameObject GameSelectPanel;
     public GameObject CreateJoinPanel;
     public GameObject GameHUDPanel;
 
-    public TMP_InputField RoomNameInputField;
     public TMP_InputField PlayerNameInputField;
+    public TMP_InputField CreateRoomNameInputField;
+    public TMP_InputField JoinRoomNameInputField;
+    public TMP_InputField MaxPlayerInputField;
+    public Toggle IsPrivateToggle;
 
     [SerializeField] TMP_Text _colsolePrintTxt;
     [SerializeField] Transform _roomListContainer;
@@ -20,6 +25,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject _noRoomsTxt;
 
     List<GameObject> _roomBtns = new List<GameObject>();
+
+    public void LoadSingleplayer()
+    {
+        SceneManager.LoadScene(1);
+    }
 
     public IEnumerator PrintConsole(string printText)
     {
