@@ -3,41 +3,30 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
 {
     [SerializeField] MPUIManager _uIManager;
     [SerializeField] GameObject _agent;
 
-    // Instance
-    // public static NetworkManager instance;
-
     IEnumerator _coroutine;
+    //TypedLobby _customLobby = new TypedLobby("customLobby", LobbyType.Default);
 
-   //TypedLobby customLobby = new TypedLobby("customLobby", LobbyType.Default);
+    #region Monobihaviour methods
 
+    // Set up internal variables and make all of cached GetComponent calls.
     void Awake()
     {
-        // If an instance alredy exits and it's not this one - destroy us
-        //if (instance != null && instance != this)
-        //{
-        //    gameObject.SetActive(false);
-        //}
-        //else
-        //{
-        //    // Set the instance
-        //    instance = this;
-        //    DontDestroyOnLoad(gameObject);
-        //}
-
+        // Currently loaded scene is synchronized across all clients in a room
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
-    #region public methods
+    #endregion
 
+    #region Public methods
+
+    // Start Multiplayer and connect to the Photon server
     public void StartMultiplayer()
     {
         _coroutine = _uIManager.PrintConsole("<color=yellow>Connecting...</color>");
@@ -49,9 +38,11 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
+    // Attempts to join lobby
     public void JoinLobby()
     {
-        //PhotonNetwork.JoinLobby(customLobby);
+        //PhotonNetwork.JoinLobby(_customLobby);
+        //PhotonNetwork.JoinLobby(TypedLobby.Default);
         PhotonNetwork.JoinLobby();
     }
 
@@ -73,16 +64,15 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         else
         {
             RoomOptions options = new RoomOptions();
-
             options.IsVisible = !_uIManager.IsPrivateToggle.isOn;
-
             options.MaxPlayers = _uIManager.MaxPlayerInputField.text != "" ? (byte) Int32.Parse(_uIManager.MaxPlayerInputField.text) : 0;
 
+            PhotonNetwork.NickName = _uIManager.PlayerNameInputField.text;
             PhotonNetwork.CreateRoom(_uIManager.CreateRoomNameInputField.text, options);
         }
     }
 
-    // Attempts to join a room
+    // Attempts to join a public/private room
     public void JoinRoomPrivate()
     {
         if (_uIManager.PlayerNameInputField.text == "")
@@ -99,13 +89,14 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
         else
         {
+            PhotonNetwork.NickName = _uIManager.PlayerNameInputField.text;
             PhotonNetwork.JoinRoom(_uIManager.JoinRoomNameInputField.text);
         }
     }
 
+    // Attempts to join a public room
     public void JoinRoomPublic(GameObject go)
     {
-
         if (_uIManager.PlayerNameInputField.text == "")
         {
             StopCoroutine(_coroutine);
@@ -114,36 +105,41 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
         else
         {
+            PhotonNetwork.NickName = _uIManager.PlayerNameInputField.text;
             PhotonNetwork.JoinRoom(go.name);
         }
     }
 
-    public void LeaveRoom()
-    {
-        _uIManager.CreateJoinPanel.SetActive(true);
-        _uIManager.GameHUDPanel.SetActive(false);
+    // This is for Same Scene
+    /**public void LeaveRoom()
+    //{
+    //    _uIManager.CreateJoinPanel.SetActive(true);
+    //    _uIManager.GameHUDPanel.SetActive(false);
 
-        PhotonNetwork.LeaveRoom();
-    }
+    //    PhotonNetwork.LeaveRoom();
+    }**/
 
+    // Attempts to leave sever
     public void LeaveServer()        
     {
         PhotonNetwork.Disconnect();
     }
 
-    // Change the scence using Photon's system
-    public void LoadScene(int sceneName)
+    // Load the scence allow for master client only
+    public void LoadScene(int sceneIndex)
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel(sceneName);
+            return;
         }
+        PhotonNetwork.LoadLevel(sceneIndex);
     }
 
     #endregion
 
-    #region punCallbacks methods
-    
+    #region PunCallbacks methods
+
+    // Call this after connected to the server
     public override void OnConnectedToMaster()
     {
         StopCoroutine(_coroutine);
@@ -155,14 +151,15 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
         //After we connected to Master server, join the Lobby
         JoinLobby();
-        //PhotonNetwork.JoinLobby(TypedLobby.Default);
     }
 
+    // Call this when room list is updated
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         _uIManager.CreateRoomButton(roomList);
     }
 
+    // Call this after created a room 
     public override void OnCreatedRoom()
     {
         StopCoroutine(_coroutine);
@@ -170,10 +167,11 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         StartCoroutine(_coroutine);
     }
 
+    // Call this after joined to a room
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.NickName = _uIManager.PlayerNameInputField.text;
-
+        // Use this for the same Scene
+        /* 
         StopCoroutine(_coroutine);
         _coroutine = _uIManager.PrintConsole("<color=green>Joined room is: </color>" + PhotonNetwork.CurrentRoom.Name);
         StartCoroutine(_coroutine);
@@ -182,10 +180,13 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         _uIManager.GameHUDPanel.SetActive(true);
 
         PhotonNetwork.Instantiate(_agent.name, new Vector3(0, 3, 0), Quaternion.identity);
+        */
 
-        //LoadScene(2);
+        // Use this for load another scene
+        LoadScene(2);
     }
 
+    // Call this when disconnecedt the sever
     public override void OnDisconnected(DisconnectCause cause)
     {
         StopCoroutine(_coroutine);
@@ -195,6 +196,7 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         _uIManager.GameSelectPanel.SetActive(true);
     }
 
+    // Call this when failed the room creation
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         StopCoroutine(_coroutine);
@@ -202,6 +204,7 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         StartCoroutine(_coroutine);
     }
 
+    // Call this when failed the room joining
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         StopCoroutine(_coroutine);
