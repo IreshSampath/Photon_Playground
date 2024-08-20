@@ -8,7 +8,7 @@ namespace com.GameArtGames.PhotonPlayground
 {
     /// Player name input field. Let the user input his name, will appear above the player in the game.
     [RequireComponent(typeof(InputField))]
-    public class PlayerNameInputField : MonoBehaviour
+    public class PlayerNameInputFieldMP : MonoBehaviour
     {
         #region Private Constants
 

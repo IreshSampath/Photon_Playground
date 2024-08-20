@@ -1,3 +1,4 @@
+using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,17 +8,25 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MPUIManager : MonoBehaviour
+public class MainMenuManager : MonoBehaviour
 {
     public GameObject GameSelectPanel;
     public GameObject CreateJoinPanel;
     public GameObject GameHUDPanel;
 
-    public TMP_InputField PlayerNameInputField;
+    public TMP_InputField PlayerNameInputFieldSP;
+    public TMP_Dropdown ScenesDropdownSP;
+
+    public TMP_InputField PlayerNameInputFieldMP;
+    public TMP_Dropdown ScenesDropdownMP;
+
     public TMP_InputField CreateRoomNameInputField;
-    public TMP_InputField JoinRoomNameInputField;
     public TMP_InputField MaxPlayerInputField;
     public Toggle IsPrivateToggle;
+
+    public TMP_InputField JoinRoomNameInputField;
+
+    public int SceneNumber;
 
     [SerializeField] TMP_Text _colsolePrintTxt;
     [SerializeField] Transform _roomListContainer;
@@ -26,9 +35,59 @@ public class MPUIManager : MonoBehaviour
 
     List<GameObject> _roomBtns = new List<GameObject>();
 
-    public void LoadSingleplayer()
+    IEnumerator _coroutine;
+    bool isFullscreen;
+
+    void Awake()
     {
-        SceneManager.LoadScene(1);
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
+
+    void Start()
+    {
+        SceneNumber = 1;
+        Cursor.lockState = CursorLockMode.None;
+        isFullscreen = false;
+    }
+
+    public void ChangeFullScreen()
+    {
+        if (!isFullscreen)
+        {
+            Screen.fullScreen = true;
+        }
+        else
+        {
+            Screen.fullScreen = false;
+        }
+        isFullscreen = !isFullscreen;
+    }
+
+    public void SelectSingleplayer()
+    {
+        PlayerPrefs.SetInt("IsSnglePlayer", 1);
+        _coroutine = PrintConsole("");
+        StartCoroutine(_coroutine);
+    }
+
+    public void SelectMultiplayer()
+    {
+        PlayerPrefs.SetInt("IsSnglePlayer", 0);
+    }
+
+    public void StartSingleplayer()
+    {
+        if (PlayerNameInputFieldSP.text == "")
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = PrintConsole("<color=red>Player name is required</color>");
+            StartCoroutine(_coroutine);
+        }
+        else
+        {
+            PlayerPrefs.SetString("PlayerName", PlayerNameInputFieldSP.text);
+            SceneManager.LoadScene(SceneNumber);
+        }
     }
 
     public IEnumerator PrintConsole(string printText)
@@ -36,6 +95,18 @@ public class MPUIManager : MonoBehaviour
         _colsolePrintTxt.text = printText;
         yield return new WaitForSeconds(5);
         _colsolePrintTxt.text = "";
+    }
+
+    public void SelectScene()
+    {
+        if(PlayerPrefs.GetInt("IsSnglePlayer") == 1)
+        {
+            SceneNumber = ScenesDropdownSP.value + 1;
+        }
+        else
+        {
+            SceneNumber = ScenesDropdownMP.value + 1;
+        }
     }
 
     public void CreateRoomButton(List<RoomInfo> rooms)

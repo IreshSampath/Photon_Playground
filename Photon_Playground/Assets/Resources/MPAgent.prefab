@@ -14,11 +14,11 @@ GameObject:
   - component: {fileID: 597902914343582504}
   - component: {fileID: 8996014730292151218}
   - component: {fileID: 92486574165010678}
-  - component: {fileID: 2673094078080578202}
+  - component: {fileID: 8814151126530948189}
   - component: {fileID: 4445166439862360824}
   - component: {fileID: 7635390905405092364}
   m_Layer: 0
-  m_Name: Agent
+  m_Name: MPAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ MonoBehaviour:
   _speed: 5
   _horizontalSpeed: 2
   _verticalSpeed: 0
---- !u!114 &2673094078080578202
+--- !u!114 &8814151126530948189
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 287099462833281987}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd08475b23aa548b7b9d28397d430b32, type: 3}
+  m_Script: {fileID: 11500000, guid: 51fae9a41fd93474fad345ad3119f238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 5

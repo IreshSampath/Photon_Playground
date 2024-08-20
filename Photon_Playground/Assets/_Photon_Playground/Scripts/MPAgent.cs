@@ -2,7 +2,7 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
-public class Agent : MonoBehaviourPunCallbacks
+public class MPAgent : MonoBehaviourPunCallbacks
 {
     [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
     public static GameObject LocalPlayerInstance;
@@ -38,10 +38,10 @@ public class Agent : MonoBehaviourPunCallbacks
             float hValue = Input.GetAxis("Horizontal");
             float vValue = Input.GetAxis("Vertical");
 
-        Vector3 movemtDirection = new Vector3(hValue, 0, vValue);
-        movemtDirection = Vector3.ClampMagnitude(movemtDirection,1);
+            Vector3 movemtDirection = new Vector3(hValue, 0, vValue);
+            movemtDirection = Vector3.ClampMagnitude(movemtDirection, 1);
 
-        transform.Translate(movemtDirection * Time.deltaTime *_speed);
+            transform.Translate(movemtDirection * Time.deltaTime * _speed);
 
             float h = _horizontalSpeed * Input.GetAxis("Mouse X");
             float v = _verticalSpeed * Input.GetAxis("Mouse Y");
