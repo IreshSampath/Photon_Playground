@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     bool isFauseGame;
     bool isFullscreen;
 
+    // Set up internal variables and make all of cached GetComponent calls.
     void Awake()
     {
         if (PlayerPrefs.GetInt("IsSnglePlayer") == 1)
@@ -88,6 +89,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Attempts to load main menu
     public void GoMainMenu()
     {
         Cursor.lockState = CursorLockMode.None;

@@ -158,7 +158,7 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
     // Call this when room list is updated
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        _mainMenuManager.CreateRoomButton(roomList);
+        _mainMenuManager.CreateRoomButtonList(roomList);
     }
 
     // Call this after created a room 

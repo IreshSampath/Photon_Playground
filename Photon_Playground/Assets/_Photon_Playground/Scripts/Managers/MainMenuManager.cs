@@ -38,11 +38,13 @@ public class MainMenuManager : MonoBehaviour
     IEnumerator _coroutine;
     bool isFullscreen;
 
+    // Set up internal variables and make all of cached GetComponent calls.
     void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
+    // Start is called before the first frame update
     void Start()
     {
         SceneNumber = 1;
@@ -50,6 +52,7 @@ public class MainMenuManager : MonoBehaviour
         isFullscreen = false;
     }
 
+    // Attempts to change fullscreen
     public void ChangeFullScreen()
     {
         if (!isFullscreen)
@@ -63,6 +66,7 @@ public class MainMenuManager : MonoBehaviour
         isFullscreen = !isFullscreen;
     }
 
+    // Attempts to select single player
     public void SelectSingleplayer()
     {
         PlayerPrefs.SetInt("IsSnglePlayer", 1);
@@ -70,11 +74,13 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(_coroutine);
     }
 
+    // Attempts to select multiplayer
     public void SelectMultiplayer()
     {
         PlayerPrefs.SetInt("IsSnglePlayer", 0);
     }
 
+    // Attempts to load single player scene
     public void StartSingleplayer()
     {
         if (PlayerNameInputFieldSP.text == "")
@@ -90,6 +96,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    // Attempts to print on the console
     public IEnumerator PrintConsole(string printText)
     {
         _colsolePrintTxt.text = printText;
@@ -97,6 +104,7 @@ public class MainMenuManager : MonoBehaviour
         _colsolePrintTxt.text = "";
     }
 
+    // Attempts to create game scene
     public void SelectScene()
     {
         if(PlayerPrefs.GetInt("IsSnglePlayer") == 1)
@@ -109,7 +117,8 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    public void CreateRoomButton(List<RoomInfo> rooms)
+    // Attempts to create room buttons list
+    public void CreateRoomButtonList(List<RoomInfo> rooms)
     {
         foreach (RoomInfo room in rooms)
         {
