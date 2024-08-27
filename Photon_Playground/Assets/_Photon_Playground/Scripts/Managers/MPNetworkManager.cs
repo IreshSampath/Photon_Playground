@@ -1,11 +1,9 @@
-using Photon.Pun;
-using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
+public class MPNetworkManager : MonoBehaviour
 {
     [SerializeField] MainMenuManager _mainMenuManager;
     [SerializeField] GameObject _agent;
@@ -19,7 +17,7 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
     void Awake()
     {
         // Currently loaded scene is synchronized across all clients in a room
-        PhotonNetwork.AutomaticallySyncScene = true;
+       // PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     #endregion
@@ -37,7 +35,7 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         _mainMenuManager.CreateJoinPanel.SetActive(false);
 
         //Connect to the Master server
-        PhotonNetwork.ConnectUsingSettings();
+       // PhotonNetwork.ConnectUsingSettings();
     }
 
     // Attempts to join lobby
@@ -45,7 +43,7 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
     {
         //PhotonNetwork.JoinLobby(_customLobby);
         //PhotonNetwork.JoinLobby(TypedLobby.Default);
-        PhotonNetwork.JoinLobby();
+       // PhotonNetwork.JoinLobby();
     }
 
     // Attempts to create a room
@@ -65,12 +63,12 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
         else
         {
-            RoomOptions options = new RoomOptions();
-            options.IsVisible = !_mainMenuManager.IsPrivateToggle.isOn;
-            options.MaxPlayers = _mainMenuManager.MaxPlayerInputField.text != "" ? (byte) Int32.Parse(_mainMenuManager.MaxPlayerInputField.text) : 0;
+            //RoomOptions options = new RoomOptions();
+            //options.IsVisible = !_mainMenuManager.IsPrivateToggle.isOn;
+            //options.MaxPlayers = _mainMenuManager.MaxPlayerInputField.text != "" ? (byte) Int32.Parse(_mainMenuManager.MaxPlayerInputField.text) : 0;
 
-            PhotonNetwork.NickName = _mainMenuManager.PlayerNameInputFieldMP.text;
-            PhotonNetwork.CreateRoom(_mainMenuManager.CreateRoomNameInputField.text, options);
+            //PhotonNetwork.NickName = _mainMenuManager.PlayerNameInputFieldMP.text;
+            //PhotonNetwork.CreateRoom(_mainMenuManager.CreateRoomNameInputField.text, options);
         }
     }
 
@@ -91,8 +89,8 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
         else
         {
-            PhotonNetwork.NickName = _mainMenuManager.PlayerNameInputFieldMP.text;
-            PhotonNetwork.JoinRoom(_mainMenuManager.JoinRoomNameInputField.text);
+            //PhotonNetwork.NickName = _mainMenuManager.PlayerNameInputFieldMP.text;
+            //PhotonNetwork.JoinRoom(_mainMenuManager.JoinRoomNameInputField.text);
         }
     }
 
@@ -107,8 +105,8 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
         else
         {
-            PhotonNetwork.NickName = _mainMenuManager.PlayerNameInputFieldMP.text;
-            PhotonNetwork.JoinRoom(go.name);
+            //PhotonNetwork.NickName = _mainMenuManager.PlayerNameInputFieldMP.text;
+            //PhotonNetwork.JoinRoom(go.name);
         }
     }
 
@@ -124,17 +122,17 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
     // Attempts to leave server
     public void LeaveServer()        
     {
-        PhotonNetwork.Disconnect();
+        //PhotonNetwork.Disconnect();
     }
 
     // Load the scence allow for master client only
     public void LoadScene()
     {
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            return;
-        }
-        PhotonNetwork.LoadLevel(_mainMenuManager.SceneNumber);
+        //if (!PhotonNetwork.IsMasterClient)
+        //{
+        //    return;
+        //}
+        //PhotonNetwork.LoadLevel(_mainMenuManager.SceneNumber);
     }
 
     #endregion
@@ -142,77 +140,77 @@ public class MPNetworkManager : MonoBehaviourPunCallbacks, ILobbyCallbacks
     #region PunCallbacks methods
 
     // Call this after connected to the server
-    public override void OnConnectedToMaster()
-    {
-        StopCoroutine(_coroutine);
-        _coroutine = _mainMenuManager.PrintConsole("<color=green>Connected to the Master Server</color>");
-        StartCoroutine(_coroutine);
+    //public override void OnConnectedToMaster()
+    //{
+    //    StopCoroutine(_coroutine);
+    //    _coroutine = _mainMenuManager.PrintConsole("<color=green>Connected to the Master Server</color>");
+    //    StartCoroutine(_coroutine);
 
-        _mainMenuManager.GameSelectPanel.SetActive(false);
-        _mainMenuManager.CreateJoinPanel.SetActive(true);
+    //    _mainMenuManager.GameSelectPanel.SetActive(false);
+    //    _mainMenuManager.CreateJoinPanel.SetActive(true);
 
-        //After we connected to Master server, join the Lobby
-        JoinLobby();
-    }
+    //    //After we connected to Master server, join the Lobby
+    //    JoinLobby();
+    //}
 
     // Call this when room list is updated
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
-    {
-        _mainMenuManager.CreateRoomButtonList(roomList);
-    }
+    //public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    //{
+    //    _mainMenuManager.CreateRoomButtonList(roomList);
+    //}
 
     // Call this after created a room 
-    public override void OnCreatedRoom()
-    {
-        StopCoroutine(_coroutine);
-        _coroutine = _mainMenuManager.PrintConsole("<color=green>Created room is: </color>" + PhotonNetwork.CurrentRoom.Name);
-        StartCoroutine(_coroutine);
-    }
+    //public override void OnCreatedRoom()
+    //{
+    //    StopCoroutine(_coroutine);
+    //    _coroutine = _mainMenuManager.PrintConsole("<color=green>Created room is: </color>" + PhotonNetwork.CurrentRoom.Name);
+    //    StartCoroutine(_coroutine);
+    //}
 
     // Call this after joined to a room
-    public override void OnJoinedRoom()
-    {
-        // Use this for the same Scene
-        /* 
-        StopCoroutine(_coroutine);
-        _coroutine = _mainMenuManager.PrintConsole("<color=green>Joined room is: </color>" + PhotonNetwork.CurrentRoom.Name);
-        StartCoroutine(_coroutine);
+    //public override void OnJoinedRoom()
+    //{
+    //    // Use this for the same Scene
+    //    /* 
+    //    StopCoroutine(_coroutine);
+    //    _coroutine = _mainMenuManager.PrintConsole("<color=green>Joined room is: </color>" + PhotonNetwork.CurrentRoom.Name);
+    //    StartCoroutine(_coroutine);
 
-        _mainMenuManager.CreateJoinPanel.SetActive(false);
-        _mainMenuManager.GameHUDPanel.SetActive(true);
+    //    _mainMenuManager.CreateJoinPanel.SetActive(false);
+    //    _mainMenuManager.GameHUDPanel.SetActive(true);
 
-        PhotonNetwork.Instantiate(_agent.name, new Vector3(0, 3, 0), Quaternion.identity);
-        */
+    //    PhotonNetwork.Instantiate(_agent.name, new Vector3(0, 3, 0), Quaternion.identity);
+    //    */
 
-        // Use this for load another scene
-        LoadScene();
-    }
+    //    // Use this for load another scene
+    //    LoadScene();
+    //}
 
     // Call this when disconnecedt the sever
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        StopCoroutine(_coroutine);
-        _coroutine = _mainMenuManager.PrintConsole("<color=red>" + cause + "</color>");
-        StartCoroutine(_coroutine);
+    //public override void OnDisconnected(DisconnectCause cause)
+    //{
+    //    StopCoroutine(_coroutine);
+    //    _coroutine = _mainMenuManager.PrintConsole("<color=red>" + cause + "</color>");
+    //    StartCoroutine(_coroutine);
 
-        _mainMenuManager.GameSelectPanel.SetActive(true);
-    }
+    //    _mainMenuManager.GameSelectPanel.SetActive(true);
+    //}
 
     // Call this when failed the room creation
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        StopCoroutine(_coroutine);
-        _coroutine = _mainMenuManager.PrintConsole("<color=red>" + message + "</color>");
-        StartCoroutine(_coroutine);
-    }
+    //public override void OnCreateRoomFailed(short returnCode, string message)
+    //{
+    //    StopCoroutine(_coroutine);
+    //    _coroutine = _mainMenuManager.PrintConsole("<color=red>" + message + "</color>");
+    //    StartCoroutine(_coroutine);
+    //}
 
     // Call this when failed the room joining
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        StopCoroutine(_coroutine);
-        _coroutine = _mainMenuManager.PrintConsole("<color=red>" + message + "</color>");
-        StartCoroutine(_coroutine);
-    }
+    //public override void OnJoinRoomFailed(short returnCode, string message)
+    //{
+    //    StopCoroutine(_coroutine);
+    //    _coroutine = _mainMenuManager.PrintConsole("<color=red>" + message + "</color>");
+    //    StartCoroutine(_coroutine);
+    //}
 
     #endregion
 }

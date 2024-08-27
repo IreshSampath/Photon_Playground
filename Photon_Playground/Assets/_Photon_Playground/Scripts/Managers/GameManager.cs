@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            _mPGameManger.gameObject.SetActive(true);
+           // _mPGameManger.gameObject.SetActive(true);
         }
     }
 

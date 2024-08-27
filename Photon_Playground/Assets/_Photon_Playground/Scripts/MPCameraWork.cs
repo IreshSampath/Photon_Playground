@@ -1,10 +1,9 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CameraWork.cs" company="Exit Games GmbH">
-using Photon.Pun;
 using UnityEngine;
 
 /// Camera work. Follow a target
-public class MPCameraWork : MonoBehaviourPunCallbacks
+public class MPCameraWork : MonoBehaviour
 {
     #region Private Fields
 
@@ -44,11 +43,11 @@ public class MPCameraWork : MonoBehaviourPunCallbacks
     /// MonoBehaviour method called on GameObject by Unity during initialization phase
     void Start()
 	{
-		if (!photonView.IsMine)
-		{
-			//cameraTransform.GetComponent<Camera>().enabled = false;
-			gameObject.GetComponent<MPCameraWork>().enabled = false;
-        }
+		//if (!photonView.IsMine)
+		//{
+		//	//cameraTransform.GetComponent<Camera>().enabled = false;
+		//	gameObject.GetComponent<MPCameraWork>().enabled = false;
+  //      }
 
         // Start following the target if wanted.
         if (followOnStart)

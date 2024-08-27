@@ -1,8 +1,7 @@
-using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
-public class SPAgent : MonoBehaviourPunCallbacks
+public class SPAgent : MonoBehaviour
 {
     [SerializeField] TMP_Text _nickname;
     [SerializeField] float _speed;

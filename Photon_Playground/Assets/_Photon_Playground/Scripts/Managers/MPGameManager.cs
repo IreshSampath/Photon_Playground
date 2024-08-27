@@ -1,11 +1,7 @@
 
-using ExitGames.Client.Photon;
-using Photon.Pun;
-using Photon.Realtime;
-
 using UnityEngine;
 
-public class MPGameManager : MonoBehaviourPunCallbacks
+public class MPGameManager : MonoBehaviour
 {
     [SerializeField] GameObject _agent;
 
@@ -14,7 +10,7 @@ public class MPGameManager : MonoBehaviourPunCallbacks
     // Set up internal variables and make all of cached GetComponent calls.
     void Awake()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
+       // PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     // Start is called before the first frame update
@@ -22,13 +18,13 @@ public class MPGameManager : MonoBehaviourPunCallbacks
     {
 
         // When creating the game, checks if the local player character was network instantiated!
-        if (PhotonNetwork.InRoom && MPAgent.LocalPlayerInstance == null)
-        {
-            //Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+        //if (PhotonNetwork.InRoom && MPAgent.LocalPlayerInstance == null)
+        //{
+        //    //Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
-            // in the room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-            PhotonNetwork.Instantiate(_agent.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-        }
+        //    // in the room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+        //    PhotonNetwork.Instantiate(_agent.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+        //}
     }
 
     // Update is called once per frame
@@ -52,32 +48,32 @@ public class MPGameManager : MonoBehaviourPunCallbacks
     #region Public methods
 
     // When joined the game, local player character instantiate!
-    public override void OnJoinedRoom()
-    {
-        // When joining the game, checks if the local player character was network instantiated!
-        if (PhotonNetwork.InRoom && MPAgent.LocalPlayerInstance == null)
-        {
-            // Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+    //public override void OnJoinedRoom()
+    //{
+    //    // When joining the game, checks if the local player character was network instantiated!
+    //    if (PhotonNetwork.InRoom && MPAgent.LocalPlayerInstance == null)
+    //    {
+    //        // Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
-            // In the room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-            PhotonNetwork.Instantiate(_agent.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-        }
-    }
+    //        // In the room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+    //        PhotonNetwork.Instantiate(_agent.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+    //    }
+    //}
 
     // Attempts to leave room
     public void LeaveRoom()
     {
-        PhotonNetwork.LeaveRoom();
+       // PhotonNetwork.LeaveRoom();
     }
     #endregion
 
     #region PunCallbacks
     // Server will disconnect and load menu scene
-    public override void OnLeftRoom()
-    {
-        PhotonNetwork.Disconnect();
-        PhotonNetwork.LoadLevel(0);
-    }
+    //public override void OnLeftRoom()
+    //{
+    //    PhotonNetwork.Disconnect();
+    //    PhotonNetwork.LoadLevel(0);
+    //}
 
     /*public override void OnPlayerLeftRoom(Player other)
     {
